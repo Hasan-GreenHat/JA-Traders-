@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>JA Traders | Certification System</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body{
+ margin:0;
+ font-family:Poppins,Arial;
+ background:#0b0e14;
+ color:#e6e6e6;
+}
+header{
+ text-align:center;
+ padding:20px;
+ background:#11151f;
+ border-bottom:1px solid #222;
+}
+header h1{color:#d4af37;margin:0;}
+section{padding:20px;}
+.card{
+ background:#11151f;
+ border-radius:15px;
+ padding:20px;
+ margin-bottom:20px;
+}
+.gold{color:#d4af37;}
+button{
+ background:#d4af37;
+ color:#000;
+ border:none;
+ padding:12px 22px;
+ border-radius:30px;
+ font-weight:600;
+ cursor:pointer;
+}
+input{
+ width:90%;
+ padding:12px;
+ border-radius:10px;
+ border:none;
+ margin-top:10px;
+}
+.option{
+ background:#1a1f2e;
+ padding:12px;
+ border-radius:10px;
+ margin:10px 0;
+ cursor:pointer;
+}
+.option:hover{background:#242a40;}
+.timer{color:#ffcc00;font-weight:600;}
+.hidden{display:none;}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>JA TRADERS</h1>
+<p>Technical Analysis Certification Platform</p>
+</header>
+
+<!-- ABOUT -->
+<section class="card">
+<h2 class="gold">About JA Traders</h2>
+<p>
+JA Traders is a free technical analysis certification platform built on the
+<strong>JA Trading Concept</strong>.
+</p>
+
+<p>
+The JA Trading Concept founder achieved a personal milestone by capturing
+<strong>4,665 pips in a single trading day</strong> on XAU/USD using this concept,
+demonstrating high-level market structure understanding at a young age.
+</p>
+
+<p style="font-size:13px;opacity:0.7">
+This platform focuses on testing understanding, not memorization.
+</p>
+</section>
+
+<!-- TEST -->
+<section class="card" id="test">
+<h2 class="gold">Certification Test</h2>
+<p class="timer">Time Left: <span id="time">25:00</span></p>
+<div id="q"></div>
+<div id="opts"></div>
+<button onclick="nextQ()">Next</button>
+</section>
+
+<!-- RESULT -->
+<section class="card hidden" id="result">
+<h2 class="gold">Result</h2>
+<p id="scoreText"></p>
+
+<input id="uname" placeholder="Enter your full name">
+<br><br>
+<button onclick="generateCertificate()">Download Certificate</button>
+<p style="font-size:12px;opacity:.6;margin-top:10px">
+Certificate downloads as IMAGE
+</p>
+</section>
+
+<!-- VERIFY -->
+<section class="card">
+<h2 class="gold">Verify Certificate</h2>
+<input id="vid" placeholder="JA-XXXXXX">
+<br><br>
+<button onclick="verify()">Verify</button>
+<p id="vres"></p>
+</section>
+
+<script>
+// ---------------- QUESTIONS (15) ----------------
+const questions=[
+{q:"Price breaks previous high, retests demand, then continues up. This confirms?",
+a:["Liquidity sweep","BOS with continuation","Range","Reversal"],c:1},
+
+{q:"Which zone offers best RR according to smart money?",
+a:["Premium","Discount","Middle","News candle"],c:1},
+
+{q:"EMA alignment showing bullish trend?",
+a:["Price below EMA","EMA flat","Price above EMA","Random cross"],c:2},
+
+{q:"Liquidity is usually resting where?",
+a:["Equal highs/lows","Middle of range","Random candles","News"],c:0},
+
+{q:"Best SL placement?",
+a:["Fixed 10 pips","Below structure","Emotional","Previous TP"],c:1},
+
+{q:"Market creates higher highs & higher lows. Bias?",
+a:["Bearish","Ranging","Bullish","Manipulation"],c:2},
+
+{q:"False breakout above high then sharp sell indicates?",
+a:["Continuation","Liquidity grab","Healthy trend","EMA support"],c:1},
+
+{q:"Which RR is professional minimum?",
+a:["1:1","1:2","1:3+","Any"],c:2},
+
+{q:"Entry after BOS should be taken at?",
+a:["Immediate market","Premium/discount zone","Random","News"],c:1},
+
+{q:"EMA mainly helps with?",
+a:["Entries","Trend bias","Liquidity","News"],c:1},
+
+{q:"Why avoid trading middle of range?",
+a:["Low RR","High RR","More liquidity","Trend"],c:0},
+
+{q:"Smart money enters where?",
+a:["Retail breakout","Liquidity zones","Random","Indicators"],c:1},
+
+{q:"Best timeframe for structure?",
+a:["M1","M5","M15–H1","Any"],c:2},
+
+{q:"Consolidation before expansion means?",
+a:["Manipulation","Accumulation","Distribution","End"],c:1},
+
+{q:"JA Trading Concept focuses mainly on?",
+a:["Indicators","Price action & structure","News","Gambling"],c:1}
+];
+
+questions.sort(()=>Math.random()-0.5);
+
+let i=0,score=0,time=1500;
+
+// ---------------- TIMER ----------------
+setInterval(()=>{
+ if(time<=0){finish();return;}
+ time--;
+ document.getElementById("time").innerText=
+ Math.floor(time/60)+":"+String(time%60).padStart(2,"0");
+},1000);
+
+function loadQ(){
+ document.getElementById("q").innerText=questions[i].q;
+ let o="";
+ questions[i].a.forEach((x,j)=>{
+  o+=`<div class="option" onclick="ans(${j})">${x}</div>`;
+ });
+ document.getElementById("opts").innerHTML=o;
+}
+loadQ();
+
+function ans(j){
+ if(j===questions[i].c) score++;
+ i++;
+ if(i>=questions.length) finish();
+ else loadQ();
+}
+function nextQ(){ans(-1);}
+
+// ---------------- RESULT ----------------
+function finish(){
+ document.getElementById("test").classList.add("hidden");
+ document.getElementById("result").classList.remove("hidden");
+ let level=score>=11?"ELITE – PROP FIRM STANDARD":
+           score>=8?"ADVANCED":"BEGINNER";
+ document.getElementById("scoreText").innerHTML=
+ `Score: <b>${score}/15</b><br>Level: <b>${level}</b>`;
+}
+
+// ---------------- CERTIFICATE GENERATOR (FIXED) ----------------
+function generateCertificate(){
+ const name=document.getElementById("uname").value.trim();
+ if(!name) return alert("Enter your name");
+
+ const id="JA-"+Math.random().toString(36).substr(2,6).toUpperCase();
+ const level=score>=11?"ELITE – PROP FIRM STANDARD":
+             score>=8?"ADVANCED":"BEGINNER";
+ const date=new Date().toDateString();
+
+ localStorage.setItem(id,JSON.stringify({name,level,score,date}));
+
+ const c=document.createElement("canvas");
+ c.width=1200; c.height=800;
+ const ctx=c.getContext("2d");
+
+ ctx.fillStyle="#0b0e14";
+ ctx.fillRect(0,0,1200,800);
+
+ ctx.strokeStyle="#d4af37";
+ ctx.lineWidth=6;
+ ctx.strokeRect(30,30,1140,740);
+
+ ctx.fillStyle="#d4af37";
+ ctx.textAlign="center";
+ ctx.font="48px serif";
+ ctx.fillText("JA TRADERS CERTIFICATION",600,140);
+
+ ctx.font="54px serif";
+ ctx.fillText(name,600,260);
+
+ ctx.font="26px Arial";
+ ctx.fillText("Level: "+level,600,340);
+ ctx.fillText("Score: "+score+"/15",600,390);
+ ctx.fillText("Certificate ID: "+id,600,450);
+ ctx.fillText(date,600,500);
+
+ ctx.font="18px Arial";
+ ctx.fillText("JA Trading Concept – Technical Analysis",600,560);
+
+ const img=c.toDataURL("image/png");
+ const w=window.open();
+ w.document.write('<img src="'+img+'" style="width:100%">');
+}
+
+// ---------------- VERIFY ----------------
+function verify(){
+ const id=document.getElementById("vid").value;
+ const d=localStorage.getItem(id);
+ const r=document.getElementById("vres");
+ if(!d){
+  r.innerHTML="❌ Certificate Not Found";
+  r.style.color="red";
+ }else{
+  const x=JSON.parse(d);
+  r.innerHTML=`✅ VERIFIED<br>
+  Name: ${x.name}<br>
+  Level: ${x.level}<br>
+  Score: ${x.score}/15<br>
+  Date: ${x.date}`;
+  r.style.color="#00ff9c";
+ }
+}
+</script>
+
+</body>
+</html>
