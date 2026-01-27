@@ -186,54 +186,74 @@ function finish(){
 
 // CERTIFICATE (MOBILE-SAFE)
 function generateCertificate(){
- const name=document.getElementById("uname").value.trim();
- if(!name) return alert("Enter your name");
+ // ===== PREMIUM CERTIFICATE DESIGN =====
+ctx.fillStyle="#0a1020";
+ctx.fillRect(0,0,1200,800);
 
- const id="JA-"+Math.random().toString(36).substr(2,6).toUpperCase();
- const level=score>=11?"ELITE – PROP FIRM STANDARD":
-             score>=8?"ADVANCED":"BEGINNER";
- const date=new Date().toDateString();
+// Gold border
+ctx.strokeStyle="#d4af37";
+ctx.lineWidth=6;
+ctx.strokeRect(25,25,1150,750);
+ctx.lineWidth=2;
+ctx.strokeRect(45,45,1110,710);
 
- localStorage.setItem(id,JSON.stringify({name,level,score,date}));
+ctx.textAlign="center";
 
- const c=document.createElement("canvas");
- c.width=1200; c.height=800;
- const ctx=c.getContext("2d");
+// Title
+ctx.fillStyle="#d4af37";
+ctx.font="36px serif";
+ctx.fillText("CERTIFICATE OF",600,120);
 
- ctx.fillStyle="#0b0e14";
- ctx.fillRect(0,0,1200,800);
+ctx.font="52px serif";
+ctx.fillText("TECHNICAL ANALYSIS KNOWLEDGE",600,180);
 
- ctx.strokeStyle="#d4af37";
- ctx.lineWidth=6;
- ctx.strokeRect(30,30,1140,740);
+// Name
+ctx.fillStyle="#ffffff";
+ctx.font="64px serif";
+ctx.fillText(name,600,280);
 
- ctx.fillStyle="#d4af37";
- ctx.textAlign="center";
+// Subtitle
+ctx.font="24px Arial";
+ctx.fillText("HAS DEMONSTRATED ADVANCED EXPERTISE IN",600,330);
 
- ctx.font="48px serif";
- ctx.fillText("JA TRADERS CERTIFICATION",600,140);
+// Main skill
+ctx.fillStyle="#d4af37";
+ctx.font="40px serif";
+ctx.fillText("FOREX TECHNICAL ANALYSIS",600,380);
 
- ctx.font="54px serif";
- ctx.fillText(name,600,260);
+// Skills list
+ctx.fillStyle="#ffffff";
+ctx.font="22px Arial";
+const skills=[
+ "✔ Market Structure & MSS",
+ "✔ Liquidity & Stop Hunts",
+ "✔ EMA Trend Strategies",
+ "✔ Risk Management & Psychology"
+];
+skills.forEach((s,i)=>{
+ ctx.fillText(s,600,430+i*32);
+});
 
- ctx.font="26px Arial";
- ctx.fillText("Level: "+level,600,340);
- ctx.fillText("Score: "+score+"/15",600,390);
- ctx.fillText("Certificate ID: "+id,600,450);
- ctx.fillText(date,600,500);
+// Footer info
+ctx.font="22px Arial";
+ctx.fillStyle="#d4af37";
+ctx.fillText(`Assessment Score: ${Math.round(score/15*100)}%`,300,620);
+ctx.fillText(`Skill Level: ${level}`,900,620);
 
- ctx.font="18px Arial";
- ctx.fillText("JA Trading Concept – Technical Analysis",600,560);
+ctx.fillStyle="#aaa";
+ctx.font="18px Arial";
+ctx.fillText(`Certificate ID: ${id}`,300,660);
+ctx.fillText(`Issued: ${new Date().toLocaleDateString()}`,900,660);
 
- const img=c.toDataURL("image/png");
-
- document.body.innerHTML=`
- <div style="background:#000;color:#fff;text-align:center;padding:20px">
-  <h2 style="color:#d4af37">Your Certificate</h2>
-  <p>📱 Long-press the image and tap <b>Save image</b></p>
-  <img src="${img}" style="border:3px solid #d4af37;border-radius:12px">
-  <p style="opacity:.6">Certificate ID: ${id}</p>
- </div>`;
+// Seal
+ctx.beginPath();
+ctx.arc(1000,520,55,0,Math.PI*2);
+ctx.fillStyle="#d4af37";
+ctx.fill();
+ctx.fillStyle="#000";
+ctx.font="16px Arial";
+ctx.fillText("CERTIFIED",1000,515);
+ctx.fillText("TRADER",1000,535);
 }
 
 // VERIFY
