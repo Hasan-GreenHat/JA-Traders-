@@ -173,6 +173,11 @@
             color: var(--primary);
         }
 
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 0.9rem;
+        }
+
         .section {
             background-color: white;
             border-radius: var(--border-radius);
@@ -278,7 +283,6 @@
         }
 
         .certificate-container {
-            display: none;
             text-align: center;
         }
 
@@ -365,7 +369,6 @@
         }
 
         .result-container {
-            display: none;
             text-align: center;
             padding: 40px;
         }
@@ -597,6 +600,7 @@
             overflow: hidden;
             box-shadow: var(--box-shadow);
             transition: transform 0.3s ease;
+            position: relative;
         }
 
         .trade-card:hover {
@@ -729,6 +733,44 @@
             border: 2px solid #ddd;
         }
 
+        .password-prompt {
+            text-align: center;
+            padding: 30px;
+            background-color: var(--light);
+            border-radius: var(--border-radius);
+            margin-bottom: 30px;
+        }
+
+        .trade-actions {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: flex;
+            gap: 5px;
+            z-index: 10;
+        }
+
+        .trade-actions button {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            cursor: pointer;
+            color: white;
+            font-size: 0.8rem;
+        }
+
+        .update-trade-btn {
+            background-color: var(--warning);
+        }
+
+        .delete-trade-btn {
+            background-color: var(--danger);
+        }
+
         @media (max-width: 768px) {
             .header-content {
                 flex-direction: column;
@@ -759,7 +801,7 @@
         }
 
         .hidden {
-            display: none;
+            display: none !important;
         }
 
         .stats {
@@ -789,6 +831,50 @@
             font-size: 0.9rem;
             color: var(--gray);
             margin-top: 5px;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: var(--box-shadow);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray);
         }
     </style>
 </head>
@@ -891,7 +977,7 @@
         </section>
 
         <!-- Certificate Section -->
-        <section id="certificate-section" class="section hidden">
+        <section id="certificate-section" class="section">
             <div id="certificate-container">
                 <!-- Certificate will be loaded here by JavaScript -->
             </div>
@@ -901,6 +987,9 @@
                 </button>
                 <button class="btn btn-secondary" id="retake-test" style="margin-left: 15px;">
                     <i class="fas fa-redo"></i> Retake Test
+                </button>
+                <button class="btn btn-warning" id="back-to-home" style="margin-left: 15px;">
+                    <i class="fas fa-home"></i> Back to Home
                 </button>
             </div>
         </section>
@@ -916,10 +1005,26 @@
                 </div>
             </div>
 
+            <!-- Password Prompt -->
+            <div id="password-prompt" class="password-prompt hidden">
+                <h3>Enter Admin Password</h3>
+                <p>Please enter the admin password to access the admin panel.</p>
+                <div class="form-group" style="max-width: 300px; margin: 20px auto;">
+                    <input type="password" id="admin-password" class="form-control" placeholder="Enter password">
+                </div>
+                <button class="btn btn-primary" id="submit-password">Submit</button>
+                <button class="btn btn-secondary" id="cancel-password" style="margin-left: 10px;">Cancel</button>
+                <p style="margin-top: 15px; font-size: 0.9rem; color: var(--gray);">
+                    <strong>Default Password:</strong> JATraders2026
+                </p>
+            </div>
+
             <!-- Admin Panel (Hidden by default) -->
             <div id="admin-panel" class="admin-panel hidden">
-                <h3 class="admin-title"><i class="fas fa-user-shield"></i> Add New Trade Signal</h3>
+                <h3 class="admin-title"><i class="fas fa-user-shield"></i> Admin Panel - Add/Edit Trades</h3>
                 <form id="trade-form">
+                    <input type="hidden" id="edit-trade-id">
+                    
                     <div class="form-row">
                         <div class="form-group">
                             <label for="trade-pair">Currency Pair</label>
@@ -980,8 +1085,8 @@
                             <label for="trade-status">Status</label>
                             <select id="trade-status" class="form-control" required>
                                 <option value="open">Open Trade</option>
-                                <option value="win">Won Trade</option>
-                                <option value="loss">Lost Trade</option>
+                                <option value="win">Won Trade (TP Hit)</option>
+                                <option value="loss">Lost Trade (SL Hit)</option>
                             </select>
                         </div>
                         <div class="form-group">
@@ -990,11 +1095,14 @@
                         </div>
                     </div>
                     
-                    <button type="submit" class="btn btn-success">
+                    <button type="submit" class="btn btn-success" id="submit-trade-btn">
                         <i class="fas fa-plus"></i> Add Trade Signal
                     </button>
                     <button type="button" class="btn btn-secondary" id="cancel-add-trade">
                         Cancel
+                    </button>
+                    <button type="button" class="btn btn-danger" id="clear-form" style="margin-left: 10px;">
+                        <i class="fas fa-times"></i> Clear Form
                     </button>
                 </form>
             </div>
@@ -1009,7 +1117,7 @@
                 <div class="stat-card success">
                     <h3>Winning Trades</h3>
                     <div class="stat-value" id="win-trades">0</div>
-                    <p>Target achieved</p>
+                    <p>Target achieved (TP Hit)</p>
                 </div>
                 <div class="stat-card danger">
                     <h3>Losing Trades</h3>
@@ -1075,6 +1183,31 @@
             <p>This is a demonstration project for educational purposes.</p>
         </div>
     </footer>
+
+    <!-- Update Trade Modal -->
+    <div id="update-modal" class="modal-overlay hidden">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Update Trade Status</h3>
+                <button class="close-modal" id="close-update-modal">&times;</button>
+            </div>
+            <p>Select the new status for this trade:</p>
+            <div style="display: flex; gap: 10px; margin: 20px 0;">
+                <button class="btn btn-success" id="mark-as-win">
+                    <i class="fas fa-check"></i> Mark as TP Hit (Win)
+                </button>
+                <button class="btn btn-danger" id="mark-as-loss">
+                    <i class="fas fa-times"></i> Mark as SL Hit (Loss)
+                </button>
+                <button class="btn btn-secondary" id="mark-as-open">
+                    <i class="fas fa-sync"></i> Mark as Open
+                </button>
+            </div>
+            <div style="text-align: right;">
+                <button class="btn btn-secondary" id="cancel-update">Cancel</button>
+            </div>
+        </div>
+    </div>
 
     <script>
         // Questions Data - Medium level with easy English
@@ -1289,6 +1422,10 @@
         let userName = "";
         let testScore = 0;
         let isAdminMode = false;
+        let currentEditTradeId = null;
+        
+        // Admin Password (Default: JATraders2026)
+        const ADMIN_PASSWORD = "JATraders2026";
         
         // DOM Elements
         const homeSection = document.getElementById('home-section');
@@ -1324,9 +1461,11 @@
         const certificateContainer = document.getElementById('certificate-container');
         const downloadCertificateBtn = document.getElementById('download-certificate');
         const retakeTestBtn = document.getElementById('retake-test');
+        const backToHomeBtn = document.getElementById('back-to-home');
         
         // Trades Section Elements
         const toggleAdminBtn = document.getElementById('toggle-admin');
+        const passwordPrompt = document.getElementById('password-prompt');
         const adminPanel = document.getElementById('admin-panel');
         const tradeForm = document.getElementById('trade-form');
         const tradesList = document.getElementById('trades-list');
@@ -1337,6 +1476,19 @@
         const tradeImageInput = document.getElementById('trade-image');
         const tradeFormImagePreview = document.getElementById('trade-form-image-preview');
         const cancelAddTradeBtn = document.getElementById('cancel-add-trade');
+        const clearFormBtn = document.getElementById('clear-form');
+        const adminPasswordInput = document.getElementById('admin-password');
+        const submitPasswordBtn = document.getElementById('submit-password');
+        const cancelPasswordBtn = document.getElementById('cancel-password');
+        const submitTradeBtn = document.getElementById('submit-trade-btn');
+        
+        // Modal Elements
+        const updateModal = document.getElementById('update-modal');
+        const closeUpdateModalBtn = document.getElementById('close-update-modal');
+        const markAsWinBtn = document.getElementById('mark-as-win');
+        const markAsLossBtn = document.getElementById('mark-as-loss');
+        const markAsOpenBtn = document.getElementById('mark-as-open');
+        const cancelUpdateBtn = document.getElementById('cancel-update');
         
         // Navigation Functions
         function showSection(sectionToShow) {
@@ -1497,7 +1649,7 @@
             }
         });
         
-        // Submit Test
+        // Submit Test - FIXED
         submitTestBtn.addEventListener('click', () => {
             // Check if all questions are answered
             const unanswered = userAnswers.filter(answer => answer === null).length;
@@ -1525,7 +1677,7 @@
             showResult(testScore);
         }
         
-        // Show Result
+        // Show Result - FIXED
         function showResult(score) {
             const passed = score >= 70;
             
@@ -1579,15 +1731,23 @@
             
             // Add event listeners for buttons in result
             if (passed) {
-                document.getElementById('view-certificate-btn').addEventListener('click', showCertificate);
+                const viewCertificateBtn = document.getElementById('view-certificate-btn');
+                if (viewCertificateBtn) {
+                    viewCertificateBtn.addEventListener('click', () => {
+                        showCertificate();
+                    });
+                }
             } else {
-                document.getElementById('retake-from-result').addEventListener('click', () => {
-                    showSection(registrationSection);
-                });
+                const retakeFromResultBtn = document.getElementById('retake-from-result');
+                if (retakeFromResultBtn) {
+                    retakeFromResultBtn.addEventListener('click', () => {
+                        showSection(registrationSection);
+                    });
+                }
             }
         }
         
-        // Show Certificate
+        // Show Certificate - FIXED
         function showCertificate() {
             const certificateId = `TA-${Math.floor(100000 + Math.random() * 900000)}`;
             const currentDate = new Date();
@@ -1664,6 +1824,11 @@
             showSection(registrationSection);
         });
         
+        // Back to Home from Certificate
+        backToHomeBtn.addEventListener('click', () => {
+            showSection(homeSection);
+        });
+        
         // Trades Section Functions
         function updateTradesDisplay() {
             // Calculate statistics
@@ -1686,11 +1851,22 @@
             
             sortedTrades.forEach(trade => {
                 const statusClass = trade.status === 'win' ? 'win' : trade.status === 'loss' ? 'loss' : 'open';
-                const statusText = trade.status === 'win' ? 'WIN' : trade.status === 'loss' ? 'LOSS' : 'OPEN';
+                const statusText = trade.status === 'win' ? 'TP HIT' : trade.status === 'loss' ? 'SL HIT' : 'OPEN';
                 const statusLabelClass = trade.status === 'win' ? 'status-win' : trade.status === 'loss' ? 'status-loss' : 'status-open';
                 
                 tradesHtml += `
                     <div class="trade-card ${statusClass}">
+                        ${isAdminMode ? `
+                        <div class="trade-actions">
+                            <button class="update-trade-btn" data-id="${trade.id}">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="delete-trade-btn" data-id="${trade.id}">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                        ` : ''}
+                        
                         <img src="${trade.image}" alt="${trade.pair} Chart" class="trade-image">
                         <div class="trade-details">
                             <div class="trade-header">
@@ -1737,26 +1913,105 @@
             });
             
             tradesList.innerHTML = tradesHtml;
+            
+            // Add event listeners for admin actions
+            if (isAdminMode) {
+                document.querySelectorAll('.update-trade-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const tradeId = parseInt(btn.dataset.id);
+                        openUpdateModal(tradeId);
+                    });
+                });
+                
+                document.querySelectorAll('.delete-trade-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const tradeId = parseInt(btn.dataset.id);
+                        if (confirm("Are you sure you want to delete this trade?")) {
+                            deleteTrade(tradeId);
+                        }
+                    });
+                });
+            }
+        }
+        
+        // Open Update Modal
+        function openUpdateModal(tradeId) {
+            currentEditTradeId = tradeId;
+            updateModal.classList.remove('hidden');
+        }
+        
+        // Close Update Modal
+        function closeUpdateModal() {
+            updateModal.classList.add('hidden');
+            currentEditTradeId = null;
+        }
+        
+        // Update Trade Status
+        function updateTradeStatus(newStatus) {
+            if (currentEditTradeId === null) return;
+            
+            const tradeIndex = trades.findIndex(trade => trade.id === currentEditTradeId);
+            if (tradeIndex !== -1) {
+                trades[tradeIndex].status = newStatus;
+                updateTradesDisplay();
+                closeUpdateModal();
+            }
+        }
+        
+        // Delete Trade
+        function deleteTrade(tradeId) {
+            trades = trades.filter(trade => trade.id !== tradeId);
+            updateTradesDisplay();
         }
         
         // Toggle Admin Mode
         toggleAdminBtn.addEventListener('click', () => {
-            isAdminMode = !isAdminMode;
-            
-            if (isAdminMode) {
-                adminPanel.classList.remove('hidden');
-                toggleAdminBtn.innerHTML = '<i class="fas fa-user"></i> User Mode';
-                toggleAdminBtn.classList.remove('btn-warning');
-                toggleAdminBtn.classList.add('btn-primary');
+            if (!isAdminMode) {
+                // Show password prompt
+                passwordPrompt.classList.remove('hidden');
+                adminPasswordInput.focus();
             } else {
+                // Exit admin mode
+                isAdminMode = false;
                 adminPanel.classList.add('hidden');
                 toggleAdminBtn.innerHTML = '<i class="fas fa-user-shield"></i> Admin Mode';
                 toggleAdminBtn.classList.remove('btn-primary');
                 toggleAdminBtn.classList.add('btn-warning');
                 // Reset form
                 tradeForm.reset();
+                document.getElementById('edit-trade-id').value = '';
+                submitTradeBtn.innerHTML = '<i class="fas fa-plus"></i> Add Trade Signal';
                 tradeFormImagePreview.src = "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80";
+                updateTradesDisplay();
             }
+        });
+        
+        // Submit Password
+        submitPasswordBtn.addEventListener('click', () => {
+            const enteredPassword = adminPasswordInput.value;
+            
+            if (enteredPassword === ADMIN_PASSWORD) {
+                isAdminMode = true;
+                passwordPrompt.classList.add('hidden');
+                adminPanel.classList.remove('hidden');
+                toggleAdminBtn.innerHTML = '<i class="fas fa-user"></i> User Mode';
+                toggleAdminBtn.classList.remove('btn-warning');
+                toggleAdminBtn.classList.add('btn-primary');
+                adminPasswordInput.value = '';
+                updateTradesDisplay();
+            } else {
+                alert("Incorrect password. Please try again.");
+                adminPasswordInput.value = '';
+                adminPasswordInput.focus();
+            }
+        });
+        
+        // Cancel Password
+        cancelPasswordBtn.addEventListener('click', () => {
+            passwordPrompt.classList.add('hidden');
+            adminPasswordInput.value = '';
         });
         
         // Preview trade image when URL changes
@@ -1766,12 +2021,14 @@
             }
         });
         
-        // Add new trade
+        // Add or Update Trade
         tradeForm.addEventListener('submit', (e) => {
             e.preventDefault();
             
-            const newTrade = {
-                id: trades.length + 1,
+            const editTradeId = document.getElementById('edit-trade-id').value;
+            
+            const tradeData = {
+                id: editTradeId ? parseInt(editTradeId) : trades.length + 1,
                 pair: document.getElementById('trade-pair').value,
                 direction: document.getElementById('trade-direction').value,
                 entry: parseFloat(document.getElementById('entry-price').value),
@@ -1783,20 +2040,56 @@
                 image: document.getElementById('trade-image').value || "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80"
             };
             
-            trades.unshift(newTrade); // Add to beginning of array
+            if (editTradeId) {
+                // Update existing trade
+                const tradeIndex = trades.findIndex(trade => trade.id === parseInt(editTradeId));
+                if (tradeIndex !== -1) {
+                    trades[tradeIndex] = tradeData;
+                }
+            } else {
+                // Add new trade
+                trades.unshift(tradeData);
+            }
+            
             updateTradesDisplay();
             
             // Reset form
             tradeForm.reset();
+            document.getElementById('edit-trade-id').value = '';
+            submitTradeBtn.innerHTML = '<i class="fas fa-plus"></i> Add Trade Signal';
             tradeFormImagePreview.src = "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80";
             
-            alert("Trade signal added successfully!");
+            alert(editTradeId ? "Trade updated successfully!" : "Trade signal added successfully!");
         });
         
-        // Cancel adding trade
+        // Cancel adding/editing trade
         cancelAddTradeBtn.addEventListener('click', () => {
             tradeForm.reset();
+            document.getElementById('edit-trade-id').value = '';
+            submitTradeBtn.innerHTML = '<i class="fas fa-plus"></i> Add Trade Signal';
             tradeFormImagePreview.src = "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80";
+        });
+        
+        // Clear form
+        clearFormBtn.addEventListener('click', () => {
+            tradeForm.reset();
+            document.getElementById('edit-trade-id').value = '';
+            submitTradeBtn.innerHTML = '<i class="fas fa-plus"></i> Add Trade Signal';
+            tradeFormImagePreview.src = "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80";
+        });
+        
+        // Modal Event Listeners
+        closeUpdateModalBtn.addEventListener('click', closeUpdateModal);
+        cancelUpdateBtn.addEventListener('click', closeUpdateModal);
+        markAsWinBtn.addEventListener('click', () => updateTradeStatus('win'));
+        markAsLossBtn.addEventListener('click', () => updateTradeStatus('loss'));
+        markAsOpenBtn.addEventListener('click', () => updateTradeStatus('open'));
+        
+        // Close modal when clicking outside
+        updateModal.addEventListener('click', (e) => {
+            if (e.target === updateModal) {
+                closeUpdateModal();
+            }
         });
         
         // Initialize the app
@@ -1810,6 +2103,14 @@
             // Reset to registration
             currentQuestion = 0;
             userAnswers.fill(null);
+        });
+        
+        // Handle Enter key in password field
+        adminPasswordInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                submitPasswordBtn.click();
+            }
         });
     </script>
 </body>
