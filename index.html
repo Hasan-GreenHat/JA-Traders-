@@ -1,194 +1,1298 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>JA Traders – Technical Analysis Certification</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JA Traders | Technical Analysis Certification</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0a1a3d;
+            --secondary: #1a3d7a;
+            --accent: #ffd700;
+            --accent-dark: #e6c200;
+            --light: #f8f9fa;
+            --danger: #dc3545;
+            --success: #28a745;
+            --gray: #6c757d;
+            --border-radius: 10px;
+            --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
 
-<style>
-body{
-  margin:0;
-  font-family:Georgia, serif;
-  background:#000;
-  color:#d4af37;
-}
-.container{
-  max-width:900px;
-  margin:auto;
-  padding:20px;
-}
-h1,h2,h3{
-  text-align:center;
-}
-.section{
-  border:2px solid #d4af37;
-  border-radius:14px;
-  padding:20px;
-  margin:25px 0;
-}
-.question{
-  margin:20px 0;
-}
-label{
-  display:block;
-  margin:8px 0;
-  color:#fff;
-}
-input[type="text"]{
-  width:100%;
-  padding:14px;
-  border-radius:8px;
-  border:none;
-  margin:15px 0;
-  font-size:16px;
-}
-button{
-  width:100%;
-  padding:16px;
-  background:#d4af37;
-  color:#000;
-  border:none;
-  border-radius:10px;
-  font-size:18px;
-  font-weight:bold;
-  margin-top:15px;
-}
-.hidden{display:none}
-.result{
-  text-align:center;
-  font-size:20px;
-  margin-top:20px;
-}
-canvas{display:none}
-.about{
-  color:#fff;
-  line-height:1.6;
-}
-</style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f0f2f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-icon {
+            font-size: 2.5rem;
+            color: var(--accent);
+        }
+
+        .logo-text h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .logo-text p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            padding: 8px 12px;
+            border-radius: var(--border-radius);
+            transition: all 0.3s ease;
+        }
+
+        nav a:hover, nav a.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--accent);
+        }
+
+        .hero {
+            background: linear-gradient(rgba(10, 26, 61, 0.9), rgba(10, 26, 61, 0.9)), url('https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            text-align: center;
+            padding: 80px 20px;
+            border-radius: var(--border-radius);
+            margin: 30px 0;
+            box-shadow: var(--box-shadow);
+        }
+
+        .hero h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: var(--accent);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto 30px;
+            opacity: 0.9;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: var(--accent);
+            color: var(--primary);
+            padding: 12px 30px;
+            border-radius: var(--border-radius);
+            font-weight: 700;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn:hover {
+            background-color: var(--accent-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+        }
+
+        .btn-primary {
+            background-color: var(--accent);
+            color: var(--primary);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: white;
+            border: 2px solid var(--accent);
+        }
+
+        .btn-secondary:hover {
+            background-color: rgba(255, 215, 0, 0.1);
+        }
+
+        .section {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: var(--box-shadow);
+        }
+
+        .section-title {
+            color: var(--primary);
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid var(--accent);
+            display: inline-block;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: var(--accent);
+            outline: none;
+        }
+
+        .test-container {
+            display: none;
+        }
+
+        .question-container {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .question-number {
+            display: inline-block;
+            background-color: var(--primary);
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 35px;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .question-text {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .options-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        @media (min-width: 768px) {
+            .options-container {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .option {
+            padding: 15px;
+            border: 2px solid #eee;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .option:hover {
+            border-color: var(--accent);
+            background-color: rgba(255, 215, 0, 0.05);
+        }
+
+        .option.selected {
+            border-color: var(--accent);
+            background-color: rgba(255, 215, 0, 0.1);
+            font-weight: 600;
+        }
+
+        .certificate-container {
+            display: none;
+            text-align: center;
+        }
+
+        .certificate {
+            background: linear-gradient(135deg, #f9f9f9 0%, #ffffff 100%);
+            border: 20px solid var(--accent);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .certificate::before {
+            content: "";
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            border: 2px solid var(--primary);
+            border-radius: 30px;
+            pointer-events: none;
+        }
+
+        .certificate-header {
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .certificate-header h2 {
+            font-size: 2.5rem;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 10px;
+        }
+
+        .certificate-header p {
+            font-size: 1.2rem;
+            color: var(--secondary);
+            letter-spacing: 8px;
+        }
+
+        .certificate-body {
+            margin: 40px 0;
+        }
+
+        .certificate-name {
+            font-size: 3rem;
+            color: var(--primary);
+            margin: 30px 0;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .certificate-text {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            line-height: 1.8;
+        }
+
+        .certificate-score {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent-dark);
+            margin: 20px 0;
+        }
+
+        .certificate-footer {
+            margin-top: 40px;
+            display: flex;
+            justify-content: space-between;
+            border-top: 2px solid #eee;
+            padding-top: 30px;
+        }
+
+        .certificate-id {
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .result-container {
+            display: none;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .result-icon {
+            font-size: 5rem;
+            margin-bottom: 20px;
+        }
+
+        .success .result-icon {
+            color: var(--success);
+        }
+
+        .fail .result-icon {
+            color: var(--danger);
+        }
+
+        .result-title {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        .success .result-title {
+            color: var(--success);
+        }
+
+        .fail .result-title {
+            color: var(--danger);
+        }
+
+        .result-message {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        @media (min-width: 992px) {
+            .about-content {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .about-text {
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        .founder-certificate {
+            background: linear-gradient(135deg, #0a1a3d 0%, #1a3d7a 100%);
+            color: white;
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .founder-certificate::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,215,0,0.1) 0%, transparent 70%);
+            z-index: 0;
+        }
+
+        .founder-certificate h3 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: var(--accent);
+            position: relative;
+            z-index: 1;
+        }
+
+        .achievement {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin: 20px 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .pips-count {
+            font-size: 4rem;
+            font-weight: 900;
+            color: var(--accent);
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+            margin: 20px 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .age-badge {
+            display: inline-block;
+            background-color: var(--accent);
+            color: var(--primary);
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-weight: 700;
+            margin-top: 15px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .test-controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        .progress-bar {
+            height: 10px;
+            background-color: #eee;
+            border-radius: 5px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .progress {
+            height: 100%;
+            background-color: var(--accent);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            margin-top: 50px;
+            background-color: var(--primary);
+            color: white;
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent);
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .hero h2 {
+                font-size: 2rem;
+            }
+            
+            .certificate-name {
+                font-size: 2.2rem;
+            }
+            
+            .pips-count {
+                font-size: 3rem;
+            }
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .stat-box {
+            background-color: var(--light);
+            padding: 15px;
+            border-radius: var(--border-radius);
+            text-align: center;
+            min-width: 150px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--gray);
+            margin-top: 5px;
+        }
+    </style>
 </head>
-
 <body>
-<div class="container">
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>JA TRADERS</h1>
+                    <p>Technical Analysis Certification</p>
+                </div>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#" class="active" id="nav-home">Home</a></li>
+                    <li><a href="#" id="nav-test">Take Test</a></li>
+                    <li><a href="#" id="nav-about">About Us</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
 
-<h1>JA TRADERS</h1>
-<h2>Elite Technical Analysis Certification</h2>
+    <div class="container">
+        <!-- Home Section -->
+        <section id="home-section" class="section">
+            <div class="hero">
+                <h2>Become a Certified Technical Analyst</h2>
+                <p>Test your knowledge with our advanced Forex Technical Analysis exam. Score 70% or higher to earn your professional certification and join the ranks of elite traders.</p>
+                <button class="btn btn-primary" id="start-test-btn">Start Certification Test</button>
+            </div>
+            
+            <div class="stats">
+                <div class="stat-box">
+                    <div class="stat-value">20</div>
+                    <div class="stat-label">Advanced Questions</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value">70%</div>
+                    <div class="stat-label">Passing Score</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value">100%</div>
+                    <div class="stat-label">Professional Certificate</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value">4,665</div>
+                    <div class="stat-label">Pips World Record</div>
+                </div>
+            </div>
+        </section>
 
-<input id="name" type="text" placeholder="Enter your full name">
+        <!-- Registration Form -->
+        <section id="registration-section" class="section hidden">
+            <h2 class="section-title">Enter Your Details</h2>
+            <p>Please provide your name to appear on the certificate.</p>
+            <form id="registration-form">
+                <div class="form-group">
+                    <label for="full-name">Full Name</label>
+                    <input type="text" id="full-name" class="form-control" placeholder="Enter your full name" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Start Test</button>
+            </form>
+        </section>
 
-<form id="exam" class="section">
+        <!-- Test Section -->
+        <section id="test-section" class="section hidden">
+            <h2 class="section-title">Technical Analysis Certification Test</h2>
+            <p>Answer all 20 questions. You need at least 70% to pass and earn your certificate.</p>
+            
+            <div class="progress-bar">
+                <div class="progress" id="test-progress"></div>
+            </div>
+            
+            <div id="test-container">
+                <!-- Questions will be loaded here by JavaScript -->
+            </div>
+            
+            <div class="test-controls">
+                <button class="btn btn-secondary" id="prev-question">Previous Question</button>
+                <div>
+                    <span id="question-counter">Question 1 of 20</span>
+                </div>
+                <button class="btn btn-primary" id="next-question">Next Question</button>
+            </div>
+            
+            <div style="text-align: center; margin-top: 30px;">
+                <button class="btn btn-primary" id="submit-test" style="padding: 15px 40px; font-size: 1.2rem;">Submit Test</button>
+            </div>
+        </section>
 
-<h3>Technical Analysis MCQ Test (15 Questions)</h3>
+        <!-- Result Section -->
+        <section id="result-section" class="section hidden">
+            <div id="result-container">
+                <!-- Result will be loaded here by JavaScript -->
+            </div>
+        </section>
 
-<script>
-const questions=[
-["What confirms MSS?","EMA crossover","Break & close beyond structure","RSI divergence","News candle",1],
-["Liquidity means?","Volume","Spread","Stop losses & pending orders","Indicators",2],
-["EMA 9 above EMA 21?","Range","Downtrend","Liquidity grab","Bullish trend",3],
-["Stop hunt purpose?","Trend","Retail entry","News","Collect liquidity",3],
-["Best TF for MSS?","1m","5m","15m+","Tick chart",2],
-["Liquidity usually lies at?","Indicators","Highs & lows","Mid range","EMA",1],
-["EMA strategy works best in?","Range","Low volume","Trending market","News",2],
-["Risk per trade should be?","10%","5%","1–2%","All in",2],
-["RR 1:3 means?","Risk>Reward","Reward>Risk","Equal","Random",1],
-["Best entry after MSS?","Immediately","At highs","On pullback","During news",2],
-["False break is also called?","Breakout","Liquidity grab","Trend","Correction",1],
-["Who provides liquidity?","Retail","Smart money","Indicators","Brokers",0],
-["EMA is a type of?","Indicator","Pattern","Fundamental","Oscillator",0],
-["Best session for liquidity?","Asia","London/NY","Weekend","Pre-market",1],
-["Psychology matters because?","Luck","Discipline","Indicators","News",1]
-];
+        <!-- Certificate Section -->
+        <section id="certificate-section" class="section hidden">
+            <div id="certificate-container">
+                <!-- Certificate will be loaded here by JavaScript -->
+            </div>
+            <div style="text-align: center; margin-top: 30px;">
+                <button class="btn btn-primary" id="download-certificate">
+                    <i class="fas fa-download"></i> Download Certificate
+                </button>
+                <button class="btn btn-secondary" id="retake-test" style="margin-left: 15px;">
+                    <i class="fas fa-redo"></i> Retake Test
+                </button>
+            </div>
+        </section>
 
-document.write(
-questions.map((q,i)=>`
-<div class="question">
-<p>${i+1}. ${q[0]}</p>
-${q.slice(1,5).map((o,j)=>`
-<label><input type="radio" name="q${i}" value="${j}"> ${o}</label>
-`).join("")}
-</div>
-`).join("")
-);
-</script>
+        <!-- About Section -->
+        <section id="about-section" class="section hidden">
+            <h2 class="section-title">About JA Traders</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <p>JA Traders is a premier trading education company founded by Ahmed Hasan Ali, a prodigy in the world of Forex trading. Our mission is to empower traders with advanced technical analysis knowledge and practical trading strategies.</p>
+                    
+                    <p>We specialize in teaching the <strong>JA Trading Concept</strong>, a proprietary methodology developed through years of market experience and analysis. Our approach combines market structure, liquidity analysis, and disciplined risk management to identify high-probability trading setups.</p>
+                    
+                    <p>Our certification program is designed to test and validate your technical analysis skills at an advanced level. Successful candidates demonstrate proficiency in key areas including Market Structure & MSS, Liquidity & Stop Hunts, EMA Trend Strategies, and Risk Management & Psychology.</p>
+                    
+                    <p>Join the ranks of elite traders who have mastered the art of technical analysis with JA Traders.</p>
+                </div>
+                
+                <div class="founder-certificate">
+                    <h3>WORLD RECORD ACHIEVEMENT</h3>
+                    <div class="achievement">AHMED HASAN ALI</div>
+                    <div class="pips-count">4,665 PIPS</div>
+                    <p>Captured in a single day trading XAU/USD (Gold)</p>
+                    
+                    <div class="age-badge">AT JUST 16 YEARS OLD</div>
+                    
+                    <p style="margin-top: 20px;">Utilizing the <strong>JA TRADING CONCEPT</strong></p>
+                    
+                    <div style="margin-top: 25px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.2);">
+                        <p><strong>Grade:</strong> ELITE - PROP FIRM STANDARD</p>
+                        <p><small>This certificate recognizes a personal milestone and is not an officially recognized world record.</small></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
 
-<button type="button" onclick="submitExam()">Submit Test</button>
-</form>
+    <footer>
+        <div class="container">
+            <div class="footer-links">
+                <a href="#" id="footer-home">Home</a>
+                <a href="#" id="footer-test">Certification Test</a>
+                <a href="#" id="footer-about">About Us</a>
+            </div>
+            <p>&copy; 2026 JA Traders. All rights reserved. | Technical Analysis Certification System</p>
+            <p>This is a demonstration project for educational purposes.</p>
+        </div>
+    </footer>
 
-<div id="result" class="result"></div>
-<button id="downloadBtn" class="hidden" onclick="generateCert()">Download Certificate</button>
+    <script>
+        // Questions Data
+        const questions = [
+            {
+                question: "In Market Structure analysis, what does a 'Break of Structure' (BOS) indicate?",
+                options: [
+                    "A reversal in the prevailing trend",
+                    "Continuation of the current trend",
+                    "Market consolidation phase",
+                    "Decreasing trading volume"
+                ],
+                correct: 1
+            },
+            {
+                question: "Which of the following best describes a 'Stop Hunt' in Forex trading?",
+                options: [
+                    "A strategy to take profits quickly",
+                    "When price moves to trigger stop losses before reversing",
+                    "Hunting for the best entry price",
+                    "A method to identify support and resistance"
+                ],
+                correct: 1
+            },
+            {
+                question: "In the context of Market Structure Shift (MSS), what is the most reliable confirmation?",
+                options: [
+                    "A single candle close beyond a swing point",
+                    "A change in the color of the MACD histogram",
+                    "Volume spike with price rejection",
+                    "Three consecutive higher highs in an uptrend"
+                ],
+                correct: 0
+            },
+            {
+                question: "When using EMA ribbons for trend identification, which configuration is most effective for capturing medium-term trends?",
+                options: [
+                    "EMA 5, 10, 20",
+                    "EMA 20, 50, 100",
+                    "EMA 50, 100, 200",
+                    "EMA 100, 200, 300"
+                ],
+                correct: 1
+            },
+            {
+                question: "What is the primary purpose of identifying 'Fair Value Gaps' (FVG) in price action?",
+                options: [
+                    "To find overbought/oversold conditions",
+                    "To identify potential reversal zones",
+                    "To locate imbalance areas that price may revisit",
+                    "To determine optimal position sizing"
+                ],
+                correct: 2
+            },
+            {
+                question: "In liquidity analysis, what does 'Bid Liquidity' refer to?",
+                options: [
+                    "Sell stops clustered below price",
+                    "Buy stops clustered above price",
+                    "High volume of buy limit orders",
+                    "Low spread during high volatility"
+                ],
+                correct: 0
+            },
+            {
+                question: "Which psychological principle is most important for maintaining trading discipline during a drawdown?",
+                options: [
+                    "Confirmation bias",
+                    "Loss aversion",
+                    "Emotional detachment",
+                    "Recency bias"
+                ],
+                correct: 2
+            },
+            {
+                question: "When analyzing order flow, what does a 'Volume Profile POC' represent?",
+                options: [
+                    "Point of Control - price with highest traded volume",
+                    "Price of Congestion - area of tight consolidation",
+                    "Point of Convergence - where multiple indicators align",
+                    "Price of Contention - key battle between buyers/sellers"
+                ],
+                correct: 0
+            },
+            {
+                question: "In the JA Trading Concept, what is the primary purpose of identifying 'Mitigation Blocks'?",
+                options: [
+                    "To set profit targets",
+                    "To identify potential reversal zones after a FVG",
+                    "To determine trade entry points",
+                    "To calculate risk-reward ratio"
+                ],
+                correct: 1
+            },
+            {
+                question: "Which of the following is NOT a characteristic of a valid 'Breaker Block'?",
+                options: [
+                    "Formed after a strong impulsive move",
+                    "Acts as support in an uptrend after being broken",
+                    "Always coincides with a Fibonacci level",
+                    "Shows significant order block rejection"
+                ],
+                correct: 2
+            },
+            {
+                question: "When applying the '3×3 Displacement' rule in market structure, what does it signify?",
+                options: [
+                    "Three consecutive pushes in one direction",
+                    "Three timeframes showing alignment",
+                    "Three attempts to break a key level",
+                    "Three candles with increasing volume"
+                ],
+                correct: 0
+            },
+            {
+                question: "What is the optimal risk-reward ratio recommended in the JA Trading Concept for day trading?",
+                options: [
+                    "1:1",
+                    "1:2",
+                    "1:3",
+                    "It varies based on market conditions"
+                ],
+                correct: 3
+            },
+            {
+                question: "In the context of 'Smart Money Concepts', what does 'Institutional Order Flow' primarily refer to?",
+                options: [
+                    "Retail trader collective actions",
+                    "Large bank and fund trading activities",
+                    "Algorithmic trading patterns",
+                    "High-frequency trading data"
+                ],
+                correct: 1
+            },
+            {
+                question: "Which EMA crossover strategy has the lowest probability of false signals in ranging markets?",
+                options: [
+                    "EMA 5 crossing EMA 20",
+                    "EMA 20 crossing EMA 50",
+                    "EMA 50 crossing EMA 200",
+                    "All perform equally poorly in ranging markets"
+                ],
+                correct: 3
+            },
+            {
+                question: "When identifying 'Liquidity Voids', what should a trader anticipate?",
+                options: [
+                    "Slow, griding price movement",
+                    "Fast, explosive price movement when reached",
+                    "Increased spread and slippage",
+                    "Decreased trading volume"
+                ],
+                correct: 1
+            },
+            {
+                question: "What is the main psychological advantage of using a 'Trade Journal'?",
+                options: [
+                    "It helps reinforce winning trades only",
+                    "It provides objective data to overcome emotional biases",
+                    "It guarantees improved trading results",
+                    "It simplifies complex trading strategies"
+                ],
+                correct: 1
+            },
+            {
+                question: "In market structure analysis, what is a 'Judas Swing'?",
+                options: [
+                    "A false breakout that traps retail traders",
+                    "A confirmed trend reversal signal",
+                    "A large engulfing candle pattern",
+                    "A divergence between price and RSI"
+                ],
+                correct: 0
+            },
+            {
+                question: "Which of the following is the most reliable confirmation for a 'Buy-Side Liquidity Grab'?",
+                options: [
+                    "Price making a new high",
+                    "Strong bullish candle closing above the grab",
+                    "Increased volume on the drop into liquidity",
+                    "RSI showing oversold conditions"
+                ],
+                correct: 2
+            },
+            {
+                question: "According to risk management principles, what is the maximum percentage of trading capital that should be risked on a single trade?",
+                options: [
+                    "5%",
+                    "10%",
+                    "2%",
+                    "It depends on the trader's experience"
+                ],
+                correct: 2
+            },
+            {
+                question: "In the JA Trading Concept, what is the primary purpose of the 'Equilibrium' zone?",
+                options: [
+                    "To identify overextended markets",
+                    "To find the fair price where buyers and sellers agree",
+                    "To set stop-loss positions",
+                    "To determine trend strength"
+                ],
+                correct: 1
+            }
+        ];
 
-<div class="section about">
-<h3>About JA Traders</h3>
-<p>
-JA Traders is a technical-analysis–focused trading education brand built on
-<strong>market structure, liquidity, EMA strategy, and disciplined risk management</strong>.
-</p>
-<p>
-The founder of <strong>JA Trading Concept</strong> created a personal milestone by
-capturing <strong>4,665 pips in a single trading day</strong>,
-showcasing precision, execution, and deep market understanding.
-</p>
-<p>
-This certification is designed to test real knowledge — not memorization.
-</p>
-</div>
-
-<canvas id="cert" width="1400" height="900"></canvas>
-
-</div>
-
-<script>
-function submitExam(){
-  let score=0;
-  questions.forEach((q,i)=>{
-    const selected=document.querySelector(`input[name="q${i}"]:checked`);
-    if(selected && parseInt(selected.value)===q[5]) score++;
-  });
-  const percent=Math.round((score/questions.length)*100);
-  const result=document.getElementById("result");
-
-  if(percent>=70){
-    result.innerHTML=`✅ PASSED – Score: ${percent}%`;
-    document.getElementById("downloadBtn").classList.remove("hidden");
-  }else{
-    result.innerHTML=`❌ FAILED – Score: ${percent}%`;
-  }
-}
-
-function generateCert(){
-  const name=document.getElementById("name").value || "Certified Trader";
-  const c=document.getElementById("cert");
-  const ctx=c.getContext("2d");
-
-  ctx.fillStyle="#0b1c2d";
-  ctx.fillRect(0,0,c.width,c.height);
-
-  ctx.strokeStyle="#d4af37";
-  ctx.lineWidth=14;
-  ctx.strokeRect(30,30,c.width-60,c.height-60);
-
-  ctx.textAlign="center";
-  ctx.fillStyle="#d4af37";
-  ctx.font="60px Georgia";
-  ctx.fillText("CERTIFICATE OF",700,140);
-  ctx.fillText("TECHNICAL ANALYSIS KNOWLEDGE",700,210);
-
-  ctx.fillStyle="#fff";
-  ctx.font="58px cursive";
-  ctx.fillText(name,700,350);
-
-  ctx.fillStyle="#d4af37";
-  ctx.font="34px Georgia";
-  ctx.fillText("Has successfully passed the JA Traders",700,430);
-  ctx.fillText("Elite Technical Analysis Certification",700,480);
-  ctx.fillText("Skill Level: ADVANCED",700,540);
-  ctx.fillText("Issued: January 2026",700,590);
-  ctx.fillText("JA Trading Concept",700,640);
-
-  const img=c.toDataURL("image/png");
-  const win=window.open();
-  win.document.write(`<img src="${img}" style="width:100%">`);
-}
-</script>
-
+        // App State
+        let currentQuestion = 0;
+        let userAnswers = new Array(questions.length).fill(null);
+        let userName = "";
+        let testScore = 0;
+        
+        // DOM Elements
+        const homeSection = document.getElementById('home-section');
+        const registrationSection = document.getElementById('registration-section');
+        const testSection = document.getElementById('test-section');
+        const resultSection = document.getElementById('result-section');
+        const certificateSection = document.getElementById('certificate-section');
+        const aboutSection = document.getElementById('about-section');
+        
+        const navHome = document.getElementById('nav-home');
+        const navTest = document.getElementById('nav-test');
+        const navAbout = document.getElementById('nav-about');
+        
+        const footerHome = document.getElementById('footer-home');
+        const footerTest = document.getElementById('footer-test');
+        const footerAbout = document.getElementById('footer-about');
+        
+        const startTestBtn = document.getElementById('start-test-btn');
+        const registrationForm = document.getElementById('registration-form');
+        const fullNameInput = document.getElementById('full-name');
+        
+        const testContainer = document.getElementById('test-container');
+        const prevQuestionBtn = document.getElementById('prev-question');
+        const nextQuestionBtn = document.getElementById('next-question');
+        const submitTestBtn = document.getElementById('submit-test');
+        const questionCounter = document.getElementById('question-counter');
+        const testProgress = document.getElementById('test-progress');
+        
+        const resultContainer = document.getElementById('result-container');
+        const certificateContainer = document.getElementById('certificate-container');
+        const downloadCertificateBtn = document.getElementById('download-certificate');
+        const retakeTestBtn = document.getElementById('retake-test');
+        
+        // Navigation Functions
+        function showSection(sectionToShow) {
+            // Hide all sections
+            [homeSection, registrationSection, testSection, resultSection, certificateSection, aboutSection]
+                .forEach(section => section.classList.add('hidden'));
+            
+            // Show the requested section
+            sectionToShow.classList.remove('hidden');
+            
+            // Update active nav
+            document.querySelectorAll('nav a').forEach(link => link.classList.remove('active'));
+            
+            if (sectionToShow === homeSection) {
+                navHome.classList.add('active');
+            } else if (sectionToShow === testSection || sectionToShow === registrationSection) {
+                navTest.classList.add('active');
+            } else if (sectionToShow === aboutSection) {
+                navAbout.classList.add('active');
+            }
+        }
+        
+        // Event Listeners for Navigation
+        navHome.addEventListener('click', (e) => {
+            e.preventDefault();
+            showSection(homeSection);
+        });
+        
+        navTest.addEventListener('click', (e) => {
+            e.preventDefault();
+            showSection(registrationSection);
+        });
+        
+        navAbout.addEventListener('click', (e) => {
+            e.preventDefault();
+            showSection(aboutSection);
+        });
+        
+        footerHome.addEventListener('click', (e) => {
+            e.preventDefault();
+            showSection(homeSection);
+        });
+        
+        footerTest.addEventListener('click', (e) => {
+            e.preventDefault();
+            showSection(registrationSection);
+        });
+        
+        footerAbout.addEventListener('click', (e) => {
+            e.preventDefault();
+            showSection(aboutSection);
+        });
+        
+        // Start Test Button
+        startTestBtn.addEventListener('click', () => {
+            showSection(registrationSection);
+        });
+        
+        // Registration Form
+        registrationForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            userName = fullNameInput.value.trim();
+            
+            if (userName) {
+                // Reset test state
+                currentQuestion = 0;
+                userAnswers.fill(null);
+                
+                // Show test section
+                showSection(testSection);
+                loadQuestion(currentQuestion);
+                updateProgress();
+            } else {
+                alert("Please enter your name to continue.");
+            }
+        });
+        
+        // Load Question
+        function loadQuestion(index) {
+            const question = questions[index];
+            
+            let optionsHtml = '';
+            question.options.forEach((option, optionIndex) => {
+                const isSelected = userAnswers[index] === optionIndex;
+                optionsHtml += `
+                    <div class="option ${isSelected ? 'selected' : ''}" data-index="${optionIndex}">
+                        ${option}
+                    </div>
+                `;
+            });
+            
+            testContainer.innerHTML = `
+                <div class="question-container">
+                    <div class="question-number">${index + 1}</div>
+                    <div class="question-text">${question.question}</div>
+                    <div class="options-container">
+                        ${optionsHtml}
+                    </div>
+                </div>
+            `;
+            
+            // Update question counter
+            questionCounter.textContent = `Question ${index + 1} of ${questions.length}`;
+            
+            // Update button states
+            prevQuestionBtn.disabled = index === 0;
+            nextQuestionBtn.disabled = index === questions.length - 1;
+            
+            // Add event listeners to options
+            document.querySelectorAll('.option').forEach(option => {
+                option.addEventListener('click', () => {
+                    const selectedIndex = parseInt(option.dataset.index);
+                    userAnswers[index] = selectedIndex;
+                    
+                    // Update UI
+                    document.querySelectorAll('.option').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    option.classList.add('selected');
+                });
+            });
+        }
+        
+        // Update Progress Bar
+        function updateProgress() {
+            const progressPercentage = ((currentQuestion + 1) / questions.length) * 100;
+            testProgress.style.width = `${progressPercentage}%`;
+        }
+        
+        // Previous Question
+        prevQuestionBtn.addEventListener('click', () => {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                loadQuestion(currentQuestion);
+                updateProgress();
+            }
+        });
+        
+        // Next Question
+        nextQuestionBtn.addEventListener('click', () => {
+            if (currentQuestion < questions.length - 1) {
+                currentQuestion++;
+                loadQuestion(currentQuestion);
+                updateProgress();
+            }
+        });
+        
+        // Submit Test
+        submitTestBtn.addEventListener('click', () => {
+            // Check if all questions are answered
+            const unanswered = userAnswers.filter(answer => answer === null).length;
+            
+            if (unanswered > 0) {
+                if (confirm(`You have ${unanswered} unanswered questions. Submit anyway?`)) {
+                    calculateScore();
+                }
+            } else {
+                calculateScore();
+            }
+        });
+        
+        // Calculate Score
+        function calculateScore() {
+            let correctAnswers = 0;
+            
+            userAnswers.forEach((answer, index) => {
+                if (answer === questions[index].correct) {
+                    correctAnswers++;
+                }
+            });
+            
+            testScore = Math.round((correctAnswers / questions.length) * 100);
+            showResult(testScore);
+        }
+        
+        // Show Result
+        function showResult(score) {
+            const passed = score >= 70;
+            
+            let resultHtml = '';
+            
+            if (passed) {
+                resultHtml = `
+                    <div class="result-container success">
+                        <div class="result-icon">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <h2 class="result-title">Congratulations!</h2>
+                        <div class="certificate-score">Your Score: ${score}%</div>
+                        <p class="result-message">
+                            You have passed the Technical Analysis Certification test with flying colors! 
+                            Your advanced knowledge of market structure, liquidity, and trading psychology 
+                            has been validated.
+                        </p>
+                        <p class="result-message">
+                            You are now eligible to receive your professional certificate.
+                        </p>
+                        <button class="btn btn-primary" id="view-certificate-btn" style="margin-top: 20px;">
+                            View Your Certificate
+                        </button>
+                    </div>
+                `;
+            } else {
+                resultHtml = `
+                    <div class="result-container fail">
+                        <div class="result-icon">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <h2 class="result-title">Keep Learning</h2>
+                        <div class="certificate-score">Your Score: ${score}%</div>
+                        <p class="result-message">
+                            You scored ${score}%, which is below the 70% passing threshold. 
+                            Don't be discouraged - technical analysis mastery requires continuous learning.
+                        </p>
+                        <p class="result-message">
+                            <strong>Better luck next time!</strong> We recommend reviewing the JA Trading Concept 
+                            materials and practicing on demo accounts before attempting the test again.
+                        </p>
+                        <button class="btn btn-primary" id="retake-from-result" style="margin-top: 20px;">
+                            Retake Test
+                        </button>
+                    </div>
+                `;
+            }
+            
+            resultContainer.innerHTML = resultHtml;
+            showSection(resultSection);
+            
+            // Add event listeners for buttons in result
+            if (passed) {
+                document.getElementById('view-certificate-btn').addEventListener('click', showCertificate);
+            } else {
+                document.getElementById('retake-from-result').addEventListener('click', () => {
+                    showSection(registrationSection);
+                });
+            }
+        }
+        
+        // Show Certificate
+        function showCertificate() {
+            const certificateId = `TA-${Math.floor(100000 + Math.random() * 900000)}`;
+            const currentDate = new Date();
+            const issueDate = currentDate.toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: 'long' 
+            });
+            
+            let skillLevel = "Intermediate";
+            if (testScore >= 90) skillLevel = "Expert";
+            else if (testScore >= 80) skillLevel = "Advanced";
+            
+            const certificateHtml = `
+                <div class="certificate">
+                    <div class="certificate-header">
+                        <h2>CERTIFICATE OF</h2>
+                        <p>TECHNICAL ANALYSIS KNOWLEDGE</p>
+                    </div>
+                    
+                    <div class="certificate-body">
+                        <p class="certificate-text">THIS IS TO CERTIFY THAT</p>
+                        <div class="certificate-name">${userName}</div>
+                        <p class="certificate-text">HAS DEMONSTRATED ${skillLevel.toUpperCase()} EXPERTISE IN</p>
+                        <h3 style="color: var(--primary); margin: 30px 0; font-size: 1.8rem;">FOREX TECHNICAL ANALYSIS</h3>
+                        
+                        <div style="display: flex; justify-content: space-around; flex-wrap: wrap; margin: 40px 0; gap: 15px;">
+                            <div style="text-align: center;">
+                                <div style="font-weight: bold; color: var(--primary);">Market Structure & MSS</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="font-weight: bold; color: var(--primary);">Liquidity & Stop Hunts</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="font-weight: bold; color: var(--primary);">EMA Trend Strategies</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="font-weight: bold; color: var(--primary);">Risk Management & Psychology</div>
+                            </div>
+                        </div>
+                        
+                        <div class="certificate-score">ASSESSMENT SCORE: ${testScore}%</div>
+                        <div style="font-size: 1.5rem; font-weight: bold; color: var(--primary); margin: 20px 0;">
+                            SKILL LEVEL: ${skillLevel.toUpperCase()}
+                        </div>
+                    </div>
+                    
+                    <div class="certificate-footer">
+                        <div>
+                            <div style="font-weight: bold;">Certificate ID: ${certificateId}</div>
+                            <div>Issued: ${issueDate}</div>
+                        </div>
+                        <div>
+                            <div style="font-weight: bold;">Assessor: JA Skill Evaluation</div>
+                            <div>JA Traders Certification Authority</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            certificateContainer.innerHTML = certificateHtml;
+            showSection(certificateSection);
+        }
+        
+        // Download Certificate
+        downloadCertificateBtn.addEventListener('click', () => {
+            alert("Certificate download functionality would be implemented here in a production environment.");
+            // In a real app, you would use a library like html2canvas to capture the certificate as an image
+            // Then offer it as a download
+        });
+        
+        // Retake Test
+        retakeTestBtn.addEventListener('click', () => {
+            showSection(registrationSection);
+        });
+        
+        // Initialize the app
+        showSection(homeSection);
+        
+        // Load the first question when test section is shown (for direct navigation)
+        navTest.addEventListener('click', () => {
+            // Reset to registration
+            currentQuestion = 0;
+            userAnswers.fill(null);
+        });
+    </script>
 </body>
 </html>
