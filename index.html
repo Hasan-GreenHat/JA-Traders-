@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>JA Traders – Elite Certification</title>
+<title>JA Traders – Technical Analysis Certification</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
@@ -17,13 +17,16 @@ body{
   margin:auto;
   padding:20px;
 }
-h1,h2{
+h1,h2,h3{
   text-align:center;
 }
-.card{
+.section{
   border:2px solid #d4af37;
   border-radius:14px;
   padding:20px;
+  margin:25px 0;
+}
+.question{
   margin:20px 0;
 }
 label{
@@ -48,8 +51,8 @@ button{
   border-radius:10px;
   font-size:18px;
   font-weight:bold;
+  margin-top:15px;
 }
-button:hover{opacity:.9}
 .hidden{display:none}
 .result{
   text-align:center;
@@ -57,6 +60,10 @@ button:hover{opacity:.9}
   margin-top:20px;
 }
 canvas{display:none}
+.about{
+  color:#fff;
+  line-height:1.6;
+}
 </style>
 </head>
 
@@ -68,50 +75,62 @@ canvas{display:none}
 
 <input id="name" type="text" placeholder="Enter your full name">
 
-<form id="exam">
+<form id="exam" class="section">
 
-<!-- Q1 -->
-<div class="card">
-<p>1. What confirms Market Structure Shift (MSS)?</p>
-<label><input type="radio" name="q1" value="A"> EMA crossover</label>
-<label><input type="radio" name="q1" value="B"> Break & close beyond high/low ✔</label>
-<label><input type="radio" name="q1" value="C"> RSI overbought</label>
-<label><input type="radio" name="q1" value="D"> News release</label>
-</div>
+<h3>Technical Analysis MCQ Test (15 Questions)</h3>
 
-<!-- Q2 -->
-<div class="card">
-<p>2. Liquidity in trading refers to?</p>
-<label><input type="radio" name="q2" value="A"> Market volume</label>
-<label><input type="radio" name="q2" value="B"> Spread size</label>
-<label><input type="radio" name="q2" value="C"> Pending orders & stop losses ✔</label>
-<label><input type="radio" name="q2" value="D"> Leverage</label>
-</div>
+<script>
+const questions=[
+["What confirms MSS?","EMA crossover","Break & close beyond structure","RSI divergence","News candle",1],
+["Liquidity means?","Volume","Spread","Stop losses & pending orders","Indicators",2],
+["EMA 9 above EMA 21?","Range","Downtrend","Liquidity grab","Bullish trend",3],
+["Stop hunt purpose?","Trend","Retail entry","News","Collect liquidity",3],
+["Best TF for MSS?","1m","5m","15m+","Tick chart",2],
+["Liquidity usually lies at?","Indicators","Highs & lows","Mid range","EMA",1],
+["EMA strategy works best in?","Range","Low volume","Trending market","News",2],
+["Risk per trade should be?","10%","5%","1–2%","All in",2],
+["RR 1:3 means?","Risk>Reward","Reward>Risk","Equal","Random",1],
+["Best entry after MSS?","Immediately","At highs","On pullback","During news",2],
+["False break is also called?","Breakout","Liquidity grab","Trend","Correction",1],
+["Who provides liquidity?","Retail","Smart money","Indicators","Brokers",0],
+["EMA is a type of?","Indicator","Pattern","Fundamental","Oscillator",0],
+["Best session for liquidity?","Asia","London/NY","Weekend","Pre-market",1],
+["Psychology matters because?","Luck","Discipline","Indicators","News",1]
+];
 
-<!-- Q3 -->
-<div class="card">
-<p>3. EMA 9 above EMA 21 means?</p>
-<label><input type="radio" name="q3" value="A"> Ranging market</label>
-<label><input type="radio" name="q3" value="B"> Downtrend</label>
-<label><input type="radio" name="q3" value="C"> Liquidity grab</label>
-<label><input type="radio" name="q3" value="D"> Bullish trend ✔</label>
+document.write(
+questions.map((q,i)=>`
+<div class="question">
+<p>${i+1}. ${q[0]}</p>
+${q.slice(1,5).map((o,j)=>`
+<label><input type="radio" name="q${i}" value="${j}"> ${o}</label>
+`).join("")}
 </div>
-
-<!-- Q4 -->
-<div class="card">
-<p>4. Main purpose of stop hunt?</p>
-<label><input type="radio" name="q4" value="A"> Trend continuation</label>
-<label><input type="radio" name="q4" value="B"> Retail entries</label>
-<label><input type="radio" name="q4" value="C"> News manipulation</label>
-<label><input type="radio" name="q4" value="D"> Collect liquidity ✔</label>
-</div>
+`).join("")
+);
+</script>
 
 <button type="button" onclick="submitExam()">Submit Test</button>
 </form>
 
 <div id="result" class="result"></div>
-
 <button id="downloadBtn" class="hidden" onclick="generateCert()">Download Certificate</button>
+
+<div class="section about">
+<h3>About JA Traders</h3>
+<p>
+JA Traders is a technical-analysis–focused trading education brand built on
+<strong>market structure, liquidity, EMA strategy, and disciplined risk management</strong>.
+</p>
+<p>
+The founder of <strong>JA Trading Concept</strong> created a personal milestone by
+capturing <strong>4,665 pips in a single trading day</strong>,
+showcasing precision, execution, and deep market understanding.
+</p>
+<p>
+This certification is designed to test real knowledge — not memorization.
+</p>
+</div>
 
 <canvas id="cert" width="1400" height="900"></canvas>
 
@@ -119,16 +138,12 @@ canvas{display:none}
 
 <script>
 function submitExam(){
-  const answers={q1:"B",q2:"C",q3:"D",q4:"D"};
   let score=0;
-  let total=4;
-
-  for(let q in answers){
-    const selected=document.querySelector(`input[name="${q}"]:checked`);
-    if(selected && selected.value===answers[q]) score++;
-  }
-
-  const percent=(score/total)*100;
+  questions.forEach((q,i)=>{
+    const selected=document.querySelector(`input[name="q${i}"]:checked`);
+    if(selected && parseInt(selected.value)===q[5]) score++;
+  });
+  const percent=Math.round((score/questions.length)*100);
   const result=document.getElementById("result");
 
   if(percent>=70){
@@ -152,27 +167,24 @@ function generateCert(){
   ctx.strokeRect(30,30,c.width-60,c.height-60);
 
   ctx.textAlign="center";
-
   ctx.fillStyle="#d4af37";
-  ctx.font="64px Georgia";
+  ctx.font="60px Georgia";
   ctx.fillText("CERTIFICATE OF",700,140);
   ctx.fillText("TECHNICAL ANALYSIS KNOWLEDGE",700,210);
 
   ctx.fillStyle="#fff";
-  ctx.font="60px cursive";
+  ctx.font="58px cursive";
   ctx.fillText(name,700,350);
 
   ctx.fillStyle="#d4af37";
   ctx.font="34px Georgia";
-  ctx.fillText("Has demonstrated advanced expertise in",700,430);
-  ctx.fillText("FOREX TECHNICAL ANALYSIS",700,480);
+  ctx.fillText("Has successfully passed the JA Traders",700,430);
+  ctx.fillText("Elite Technical Analysis Certification",700,480);
   ctx.fillText("Skill Level: ADVANCED",700,540);
   ctx.fillText("Issued: January 2026",700,590);
-  ctx.fillText("Certified by JA Traders",700,640);
+  ctx.fillText("JA Trading Concept",700,640);
 
   const img=c.toDataURL("image/png");
-
-  // ✅ iOS SAFE DOWNLOAD
   const win=window.open();
   win.document.write(`<img src="${img}" style="width:100%">`);
 }
