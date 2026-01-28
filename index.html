@@ -1811,13 +1811,82 @@
             certificateContainer.innerHTML = certificateHtml;
             showSection(certificateSection);
         }
-        
-        // Download Certificate
-        downloadCertificateBtn.addEventListener('click', () => {
-            alert("Certificate download functionality would be implemented here in a production environment.");
-            // In a real app, you would use a library like html2canvas to capture the certificate as an image
-            // Then offer it as a download
+      <!-- Replace the existing downloadCertificateBtn event listener in the JavaScript section with this: -->
+
+// Download Certificate - FIXED to actually download
+downloadCertificateBtn.addEventListener('click', () => {
+    // Create a temporary canvas to capture the certificate
+    const certificateElement = document.querySelector('.certificate');
+    
+    // Use html2canvas library if available, otherwise show alternative
+    if (typeof html2canvas !== 'undefined') {
+        html2canvas(certificateElement, {
+            scale: 2,
+            useCORS: true,
+            backgroundColor: '#ffffff'
+        }).then(canvas => {
+            // Convert canvas to image
+            const image = canvas.toDataURL('image/png');
+            
+            // Create download link
+            const link = document.createElement('a');
+            link.download = `JA_Traders_Certificate_${userName.replace(/\s+/g, '_')}.png`;
+            link.href = image;
+            link.click();
         });
+    } else {
+        // Fallback if html2canvas is not available
+        const certificateHtml = `
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <title>JA Traders Certificate - ${userName}</title>
+                <style>
+                    body { font-family: Arial, sans-serif; margin: 0; padding: 20px; }
+                    .certificate-container { 
+                        border: 20px solid #ffd700; 
+                        padding: 40px; 
+                        max-width: 800px; 
+                        margin: 0 auto;
+                        background: white;
+                    }
+                    .certificate-name {
+                        font-size: 48px;
+                        font-weight: bold;
+                        margin: 30px 0;
+                        text-align: center;
+                    }
+                    .certificate-score {
+                        font-size: 36px;
+                        color: #e6c200;
+                        font-weight: bold;
+                        margin: 20px 0;
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="certificate-container">
+                    <h1 style="text-align: center; color: #0a1a3d;">CERTIFICATE OF TECHNICAL ANALYSIS</h1>
+                    <p style="text-align: center;">THIS IS TO CERTIFY THAT</p>
+                    <div class="certificate-name">${userName}</div>
+                    <p style="text-align: center;">HAS SUCCESSFULLY COMPLETED THE</p>
+                    <h2 style="text-align: center; color: #0a1a3d;">FOREX TECHNICAL ANALYSIS CERTIFICATION</h2>
+                    <div class="certificate-score" style="text-align: center;">SCORE: ${testScore}%</div>
+                    <p style="text-align: center;">Issued: ${new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+                </div>
+            </body>
+            </html>
+        `;
+        
+        // Open print dialog for the certificate
+        const printWindow = window.open('', '_blank');
+        printWindow.document.write(certificateHtml);
+        printWindow.document.close();
+        printWindow.focus();
+        printWindow.print();
+    }
+});  
+    
         
         // Retake Test
         retakeTestBtn.addEventListener('click', () => {
