@@ -127,38 +127,43 @@ function submitTest(){
 }
 
 function downloadCert(){
-  const name=document.getElementById("name").value || "Trader";
-  const c=document.getElementById("cert");
-  const ctx=c.getContext("2d");
+  const name = document.getElementById("name").value || "Trader";
+  const c = document.getElementById("cert");
+  const ctx = c.getContext("2d");
 
+  // Background
   ctx.fillStyle="#0b1c2d";
   ctx.fillRect(0,0,c.width,c.height);
 
+  // Border
   ctx.strokeStyle="#d4af37";
-  ctx.lineWidth=10;
-  ctx.strokeRect(20,20,1160,760);
+  ctx.lineWidth=12;
+  ctx.strokeRect(20,20,c.width-40,c.height-40);
 
-  ctx.fillStyle="#d4af37";
-  ctx.font="50px Georgia";
+  // Text
   ctx.textAlign="center";
-  ctx.fillText("CERTIFICATE OF",600,120);
-  ctx.fillText("TECHNICAL ANALYSIS KNOWLEDGE",600,180);
-
-  ctx.font="40px cursive";
-  ctx.fillStyle="#fff";
-  ctx.fillText(name,600,300);
-
-  ctx.font="30px Georgia";
   ctx.fillStyle="#d4af37";
-  ctx.fillText("Certified by JA Traders",600,380);
-  ctx.fillText("Strategy: JA Trading Concept",600,430);
-  ctx.fillText("Skill Level: ADVANCED",600,480);
+  ctx.font="52px Georgia";
+  ctx.fillText("CERTIFICATE OF", c.width/2, 120);
+  ctx.fillText("TECHNICAL ANALYSIS KNOWLEDGE", c.width/2, 180);
 
-  const link=document.createElement("a");
-  link.download="JA_Traders_Certificate.png";
-  link.href=c.toDataURL();
-  link.click();
+  ctx.fillStyle="#ffffff";
+  ctx.font="48px cursive";
+  ctx.fillText(name, c.width/2, 300);
+
+  ctx.fillStyle="#d4af37";
+  ctx.font="30px Georgia";
+  ctx.fillText("Certified by JA Traders", c.width/2, 390);
+  ctx.fillText("Strategy: JA Trading Concept", c.width/2, 440);
+  ctx.fillText("Skill Level: ADVANCED", c.width/2, 490);
+  ctx.fillText("Issued: January 2026", c.width/2, 540);
+
+  // ✅ OPEN IMAGE IN NEW TAB (iOS SAFE)
+  const img = c.toDataURL("image/png");
+  const win = window.open();
+  win.document.write(`<img src="${img}" style="width:100%">`);
 }
 </script>
+  
 </body>
 </html>
