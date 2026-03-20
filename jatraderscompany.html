@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JA TRADERS</title>
+
+<!-- GOOGLE FONTS -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background: #0b0b0b;
+    color: white;
+}
+
+/* NAVBAR */
+header {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 8%;
+    background: rgba(0,0,0,0.8);
+    backdrop-filter: blur(10px);
+    position: sticky;
+    top: 0%;
+    z-index: 999;
+}
+
+header h2 {
+    color: gold;
+    font-weight: 700;
+}
+
+nav a {
+    color: #ccc;
+    margin: 0 15px;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+nav a:hover {
+    color: gold;
+}
+
+/* HERO */
+.hero {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 100px 8%;
+    flex-wrap: wrap;
+}
+
+.hero-text {
+    max-width: 500px;
+}
+
+.hero-text h1 {
+    font-size: 48px;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.hero-text p {
+    margin: 20px 0;
+    color: #aaa;
+}
+
+/* BUTTONS */
+.btn {
+    padding: 14px 28px;
+    margin: 10px 5px;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(45deg, gold, orange);
+    color: black;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn:hover {
+    transform: translateY(-3px) scale(1.05);
+}
+
+/* IMAGE */
+.hero img {
+    width: 320px;
+    filter: drop-shadow(0 0 20px rgba(255,215,0,0.3));
+    animation: float 3s infinite ease-in-out;
+}
+
+/* SECTIONS */
+section {
+    padding: 80px 8%;
+    text-align: center;
+}
+
+h2 {
+    font-size: 32px;
+    margin-bottom: 20px;
+}
+
+/* ABOUT */
+.about p {
+    max-width: 700px;
+    margin: auto;
+    color: #bbb;
+}
+
+.about img {
+    margin-top: 20px;
+    width: 250px;
+    border-radius: 10px;
+    border: 2px solid gold;
+}
+
+/* BOOK CARD */
+.book-box {
+    margin-top: 20px;
+    padding: 30px;
+    border-radius: 15px;
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(10px);
+    display: inline-block;
+    transition: 0.3s;
+}
+
+.book-box:hover {
+    transform: scale(1.03);
+}
+
+/* SOCIAL */
+.social-btn {
+    display: inline-block;
+    margin: 10px;
+    padding: 12px 25px;
+    background: linear-gradient(45deg, gold, orange);
+    color: black;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+/* ANIMATIONS */
+@keyframes float {
+    0% {transform: translateY(0);}
+    50% {transform: translateY(-15px);}
+    100% {transform: translateY(0);}
+}
+
+/* MOBILE */
+@media(max-width:768px){
+    .hero {
+        flex-direction: column;
+        text-align: center;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h2>JA TRADERS</h2>
+    <nav>
+        <a href="#">Home</a>
+        <a href="#about">About</a>
+        <a href="#book">Book</a>
+        <a href="#contact">Contact</a>
+    </nav>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+    <div class="hero-text">
+        <h1>Master The Market Like a Professional 📈</h1>
+        <p>Discover the exact strategy that helped me generate consistent profits in trading.</p>
+
+        <a href="https://wa.me/918019671808?text=Hi%20I%20want%20to%20buy%20your%20trading%20book" target="_blank">
+            <button class="btn">Buy Book</button>
+        </a>
+
+        <a href="https://wa.me/918019671808?text=Hi%20I%20want%20to%20join%20your%20YouTube%20mentorship" target="_blank">
+            <button class="btn">Join Mentorship</button>
+        </a>
+    </div>
+
+    <img src="ai-generated-3d-cartoon-man-in-white-suit-businessman-character-on-transparent-background-png.png">
+</section>
+
+<!-- ABOUT -->
+<section id="about" class="about">
+    <h2>About Me</h2>
+    <p>I am Ahmed Hasan Ali, the ceo of "JA TRADERS COMPANY",and a trader who built a profitable strategy through real market experience. My goal is to help traders avoid losses and become consistently profitable.</p>
+    <p>🏆 World Record: 4665 pips in a single day at age 16</p>
+
+    <img src="worldrecorecertificateimg.jpeg">
+</section>
+
+<!-- BOOK -->
+<section id="book">
+    <h2>My Trading Book 📘</h2>
+
+    <div class="book-box">
+      <p>✔ Scalping Strategy</p>
+        <p>✔ Long Term Trades Strategy</p>
+        <p>✔ High Risk Reward Strategy</p>
+
+        <br>
+
+        <a href="https://wa.me/918019671808?text=Hi%20I%20want%20to%20buy%20your%20trading%20book" target="_blank">
+            <button class="btn">Buy via WhatsApp</button>
+        </a>
+    </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+    <h2>Connect With Me</h2>
+
+    <a href="https://www.instagram.com/ja_scalperfx.18/" class="social-btn">Instagram</a>
+    <a href="https://www.youtube.com/@ja_scalper.fx18" class="social-btn">YouTube</a>
+</section>
+
+</body>
+</html>
